@@ -1,5 +1,5 @@
 {
-  "name": "component-library",
+  "name": "survey-component",
   "version": "0.0.1",
   "peerDependencies": {
     "@angular/common": "^14.2.0",

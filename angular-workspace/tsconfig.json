@@ -4,8 +4,8 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "component-library": [
-        "dist/component-library"
+      "survey-component": [
+        "dist/survey-component"
       ]
     },
     "outDir": "./dist/out-tsc",
