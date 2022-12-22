@@ -1,17 +1,18 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { lastValueFrom } from 'rxjs';
-import { SurveyService } from './survey.service';
-
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+// import { lastValueFrom } from 'rxjs';
+import {  AlertOptions } from '@ionic/angular';
+import { ToastController } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
 @Component({
   selector: 'lib-survey-component',
   templateUrl: './survey-component.component.html',
   styleUrls: ['./survey-component.component.scss']
 })
 export class SurveyComponentComponent implements OnInit  {
-  
+  @Output() testDataEvent =new EventEmitter<string>();
   @Input() categories: any;
   @Input() itemCollection: any;
-  
+  catwall:any;
 
   @Input() survey_item_collection: any;
   
@@ -26,17 +27,48 @@ export class SurveyComponentComponent implements OnInit  {
   @Input() seedDataSubject: any;
   moveCats: Record<string, any> = {};
 
-  constructor(private surveyservice:SurveyService
+
+ 
+  constructor(private toastCtrl: ToastController,
+    private alertCtrl: AlertController
     ) {
-      this.surveyservice.seedData.next(this.seedDataSubject);
+     
     }
 
-  ngOnInit(): void {
-    
-    this.categories.subscribe((res: any)=>{
-      this.wholeCats=res;
-    });
-    this.survey_item_collection.map((sitem: Record<string, any>)=>this.addCatItem(sitem));
+
+  // @Input() wholeItemsClient: any;
+  // clientItems: any;
+  // openCats = [];
+  // @Input() silcatsClient : any;
+  // silsurvey: Record<string, any>= {};
+  // silcats: any;
+  // @Input() silSurveyClient: any;
+
+ 
+
+// constructor(){
+
+// }
+
+ngOnInit(): void {
+  this.testDataEvent.emit(this.survey_item_collection);
+  console.log('shdg',this.testDataEvent)
+  this.categories.subscribe((res: any)=>{
+    this.wholeCats=res;
+  });
+  this.survey_item_collection.map((sitem: Record<string, any>)=>this.addCatItem(sitem));
+this.itemCollection.subscribe((res:any)=>{
+  this.catwall=res;
+})
+  //   this.wholeItemsClient.subscribe((res: any)=>{
+  //     this.clientItems= res;
+  //     console.log('jshjdb',this.clientItems);
+  //   });
+
+   
+  // this.populateBadges(this.silcats,this.silsurvey);
+  // this.expandCategory(this.silcats[0].category_id,);
+   
   }
   objectValues = (obj: Record<string, any>) => Object.values(obj);
 
@@ -79,6 +111,7 @@ export class SurveyComponentComponent implements OnInit  {
         }
       } else item['list_status'] = true;
       item['list_item_qty']++;
+      this.testDataEvent.emit(this.survey_item_collection);
       this.addCatItem(item);
     } catch (e) {
     }
@@ -105,6 +138,7 @@ export class SurveyComponentComponent implements OnInit  {
         this.survey_item_collection[ritems['superior'][ritems['superior'].length-1].sindex].list_status = false;
       }
       item['list_item_qty']--;
+      this.testDataEvent.emit(this.survey_item_collection);
       this.removeCatItem(item, !iCount);
     } catch (e) {
     }
@@ -116,7 +150,7 @@ searchItems(event: any) {
     const ssel: any = document.getElementById('searchSelect');
     const list:any = document.getElementById('searchList');
     list.innerHTML = '';
-    this.itemCollection
+    this.catwall
     .map((item: Record<string, any>) => {
       if (
         item['item_status'] &&
@@ -136,20 +170,20 @@ searchItems(event: any) {
             const sfitem = this.survey_item_collection.find((fitem: Record<string, any>)=>fitem['list_item_id']===item['item_id']);
             if(sfitem) {
               if(!sfitem.list_status) this.addItem(sfitem);
-              else this.surveyservice.presentToast('Item already added', 'bottom');
+              else this.presentToast('Item already added', 'bottom');
             } else {
-              item = this.surveyservice.organiseItemCategories(item, this.wholeCats);
+              item = this.organiseItemCategories(item, this.wholeCats);
               item['list_room_id'] = this.listRoomId;
               item['list_room_order'] = this.listRoomOrder;
               item['list_item_id'] = item['item_id'];
               item['list_status'] = true;
               item['list_item_qty'] = 1;
               this.addItem(item);
-              this.surveyservice.presentToast(item['item_description']+' added', 'bottom');
+              this.presentToast(item['item_description']+' added', 'bottom');
               this.expandCategory(item['item_category_id']);
             }
           } catch (error) {
-            this.surveyservice.presentToast( 'bottom');
+            this.presentToast( 'bottom');
           }
         };
         list.appendChild(li);
@@ -160,6 +194,7 @@ searchItems(event: any) {
   }
 
   openItem(openItemId: string) {
+    console.log('hit');
     const items = this.arrOfItems(openItemId);
     if(items?.length) {
       let body = `<div>`;
@@ -178,7 +213,7 @@ searchItems(event: any) {
         `;
       }
       body += `</div>`;
-      this.surveyservice.presentAlert({
+      this.presentAlert({
         message: body,
         cssClass: 'sub-item-content',
         mode: 'ios',
@@ -191,8 +226,85 @@ searchItems(event: any) {
        });
     }
   }
+  presentAlert = async (alertOptions: AlertOptions) => (await this.alertCtrl.create(alertOptions)).present();
 
+  async presentToast(msg: string, position: 'top' | 'bottom' | 'middle' = 'top', color = 'dark') {
+    const toast = await this.toastCtrl.create({
+      message: msg,
+      duration: 1500,
+      position,
+      color,
+    });
+    if(position==='bottom') toast.cssClass = 'defaultToastAtBottom';
+    toast.present();
+  }
+
+  organiseItemCategories(item: Record<string, any>, wholeCats: any[]) {
+    if(!item['sub_category_id']) {
+      if(!wholeCats) wholeCats = this.wholeCats.value.Categories.data.filter((cat: Record<string, any>)=>cat['status']);
+      const fcat = wholeCats.find((cat: Record<string, any>)=>cat['category_id']===item['item_category_id']);
+      if(fcat) {
+        item['sub_category_id'] = fcat.category_id;
+        if (fcat.parent_category_id) item['item_category_id'] = fcat.parent_category_id;
+      }
+    }
+    return item;
+  }
 }
+
+  //ngOnChanges(){
+  //   this.silcatsClient.subscribe((res : any) =>  {
+  //     this.silcats = res;
+  //     console.log('hxsgsyfyw',this.silcats);
+  //   });
+  //   this.silSurveyClient.subscribe((res:any) =>{
+  //     this.silsurvey =res;
+  //     console.log('hxsvfvfffbfffffffffg',this.silsurvey);
+    
+  // });
+  
+
+
+ // }
+  
+  // arrOfcat = (catid: number) => this.silsurvey['item_collection'].filter((item: any)=> item.item_category_id===catid);
+
+  //   populateBadges(cats:any,esurv: any) {
+  //     console.log('hit');
+  //     cats = cats.map((cat: Record<string, any>) =>{cat['category_badge']=0; return cat;});
+  //     esurv.item_collection.map((item:any)=>{
+  //       cats.find((cat:any)=>item.item_category_id===cat.category_id).category_badge += +item.list_item_qty;
+  //     });
+  //   }
+  //   expandCategory = (catid: number) =>
+  //      this.openCats.push(('category' + catid as never));
+
+      //  showSelSubcats = (parent_cat_id: string,parent_cat_name: string) => this.createSelSubsModal(this.subCatsSendCtrl(parent_cat_id,parent_cat_name,this.silwcats,this.silsurvey,true)
+      //  );
+   
+      //  async createSelSubsModal(input_obj: Record<string, any>) {
+      //   const modal = await this.modalCtrl.create({
+      //     backdropDismiss:false,
+      //     component: SubcatsPage,
+      //     componentProps: input_obj
+      //   });
+      //   await modal.present();
+      //   modal.onDidDismiss().then((res) => {
+      //     const ret = JSON.parse(res.data.data);
+      //     const pid = ret.parent_cat_id;
+      //     this.silcats.find((cat)=>cat.category_id===pid).category_badge = ret.subnum;
+      //     this.expandCategory(pid);
+      //   });
+      // }
+// <---------------------------------------------------------------vendor-------------------------------------------------------------------------------->
+    
+
+
+ 
+
+
+  
+
 
 
 

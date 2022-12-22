@@ -30,11 +30,11 @@
     </ion-list>
   </ion-header>
 
-<ion-accordion-group class="csil_grid" multiple="true"  *ngIf="survey_item_collection?.length" [value]="openCats">
+<!-- <ion-accordion-group class="csil_grid" multiple="true"  *ngIf="survey_item_collection?.length" [value]="openCats">
     <ion-accordion *ngFor="let cat of objectValues(this.moveCats)" [value]="'category'+cat['category_id']"
         class="csilcat">
         <ion-row slot="header" class="csilcat-row nowrap">
-            <ion-col size="2"><img class="csilcat_icon" src="assets/icons/item_{{cat['category_code']}}.png">
+            <ion-col size="2"><img class="csilcat_icon" src="assets/icons/item_{{cat['category_code']}}.png" >
             </ion-col>
             <ion-col size="7">{{cat["category_name"]}}</ion-col>
             <ion-col size="3" class="ion-text-right">
@@ -46,7 +46,7 @@
               <ion-col size="2">
                 <img class="silitem_icon" src="assets/icons/item_{{sitem['item_code']}}.png">
               </ion-col>
-              <ion-col class="itails nowrap" size="6.5" class="ion-text-left">
+              <ion-col class="itails nowrap" size="6.5" class="ion-text-left" (click)="openItem(sitem.list_item_id)">
                 <ion-row class="itxt nowrap" [id]="'sitem_'+sitem['list_item_id']+'_desc'"><span>
                     <strong>{{sitem["item_description"]}}</strong></span></ion-row>
                 <ion-row class="ithnt nowrap" *ngIf="sitem['item_hint']"><span>{{sitem["item_hint"]}}</span></ion-row>
@@ -63,4 +63,111 @@
             </ion-row>
         </div>
     </ion-accordion>
+</ion-accordion-group> -->
+<ion-content>
+  <ion-accordion-group class="csil_grid" multiple="true" *ngIf="survey_item_collection?.length" [value]="openCats">
+    <ion-accordion *ngFor="let cat of objectValues(this.moveCats)" [value]="'category'+cat['category_id']" class="csilcat">
+      <ion-row slot="header" class="csilcat-row nowrap">
+        <ion-col size="2"> <img class="csilcat_icon" src="assets/icons/item_{{cat['category_code']}}.png"> </ion-col>
+        <ion-col size="7">{{cat["category_name"]}}</ion-col>
+        <ion-col size="3" class="ion-text-right"> <ion-badge *ngIf="cat['category_badge']">{{cat["category_badge"]}}</ion-badge> </ion-col>
+      </ion-row>
+      <div *ngFor="let sitem of objectValues(cat.items)" slot="content" class="item-box">
+        <ion-row class="item-row-content">
+          <ion-col size="2">
+            <img class="silitem_icon" src="assets/icons/item_{{sitem['item_code']}}.png">
+          </ion-col>
+          <ion-col class="itails nowrap" size="6.5" class="ion-text-left" (click)="openItem(sitem.list_item_id)">
+            <ion-row class="itxt nowrap" [id]="'sitem_'+sitem['list_item_id']+'_desc'"><span>
+              <strong>{{sitem["item_description"]}}</strong></span></ion-row>
+            <ion-row class="ithnt nowrap" *ngIf="sitem['item_hint']"><span>{{sitem["item_hint"]}}</span></ion-row>
+            <ion-row class="itdim nowrap" ><span>L : {{sitem["item_length"]}} | B : {{sitem["item_width"]}} | H : {{sitem["item_height"]}}</span></ion-row>
+          </ion-col>
+          <ion-col size="3.5" class="ion-text-right arbtns_col">
+            <div *ngIf="countOfItems(sitem.list_item_id) as itemCount">
+              <span class="ib-remove" (click)="removeItem(sitem)" > <ion-icon name="remove"> </ion-icon></span>
+              <span class="ib-quant">{{itemCount}}</span>
+            </div>
+            <span class="ib-add"> <ion-icon name="add" (click)="addItem(sitem)" > </ion-icon></span>
+          </ion-col>
+        </ion-row>
+      </div>
+    </ion-accordion>
+  </ion-accordion-group>
+</ion-content> 
+
+
+<!-- ------------------------------------------------client app --------------------------------------------------->
+
+
+
+
+
+
+
+
+  <!-- <ion-list id="searchSelect" ><ul id='searchList'></ul></ion-list>
+  <ion-accordion-group class="csil_grid ion-no-padding" multiple="true" [value]='openCats'>
+    <ion-accordion *ngFor="let cat of silcats" [value]="'category'+cat['category_id']">
+      <ion-row slot="header" class="csilcat">
+        <ion-col size="2"> <img class="csilcat_icon" src="assets/icons/item_{{cat['category_code']}}.png"> </ion-col>
+        <ion-col size="7">
+          {{cat["category_name"]}}
+          <ion-icon class="opencat" name="open-outline" color="primary"  ></ion-icon>
+        </ion-col>
+        <ion-col size="3" class="ion-text-right"> <ion-badge *ngIf="cat['category_badge']">{{cat["category_badge"]}}</ion-badge> </ion-col>
+      </ion-row>
+      <ion-row slot="content" class="csilitem" *ngFor="let item of arrOfcat(cat['category_id'])" >
+        <ion-col  size="2">
+          <img class="silitem_icon" src="assets/icons/item_{{item['item_code']}}.png" >
+        </ion-col>
+        <ion-col class="itails" size="6.5" class="ion-text-left">
+          <ion-row class="itxt" [id]="'item_'+item['list_item_id']+'_desc'"><span><strong>{{item["item_description"]}}</strong></span></ion-row>
+          <ion-row class="ithnt" *ngIf="item['item_hint']"><span>{{item["item_hint"]}}</span></ion-row>
+          <ion-row class="itdim" ><span>L : {{item["item_length"]}} | B : {{item["item_width"]}} | H : {{item["item_height"]}}</span></ion-row>
+        </ion-col>
+        <ion-col size="3.5" class="ion-text-right arbtns_col">
+          <p class="ib-remove" *ngIf="item['list_item_qty']"  > <ion-icon name="remove"> </ion-icon></p>
+          <p class="ib-quant" *ngIf="item['list_item_qty']" > {{ item['list_item_qty'] }} </p>
+          <p class="ib-add"> <ion-icon name="add"  > </ion-icon></p>
+        </ion-col>
+      </ion-row>
+    </ion-accordion>
+  </ion-accordion-group> -->
+
+
+<!-- <ion-content>
+<ion-accordion-group>
+<ion-accordion *ngFor="let cat of silcats" [value]="'category'+cat['category_id']">
+   <img class="csilcat_icon" src="assets/icons/item_{{cat['category_code']}}.png">
+    
+</ion-accordion>
 </ion-accordion-group>
+</ion-content> -->
+<!-- <ion-list id="searchSelect" ><ul id='searchList'></ul></ion-list>
+<ion-accordian-group class="csil_grid ion-no-padding" multiple="true" [value]='openCats'>
+<ion-accordian *ngFor="let cat of silcats" [value]="'category'+cat['category_id']" >
+  <ion-row slot="header" class="csilcat">
+    <ion-col size="2"><img class="csilcat_icon" src="assets/icons/item_{{cat['category_code']}}.png"></ion-col>
+    <ion-col size="7">
+      {{cat["category_name"]}}
+      <ion-icon class="opencat" name="open-outline" color="primary"  ></ion-icon>
+    </ion-col>
+    <ion-col size="3" class="ion-text-right"> <ion-badge *ngIf="cat['category_badge']">{{cat["category_badge"]}}</ion-badge> </ion-col>
+</ion-row>
+<ion-row slot="content" class="csilitem" *ngFor="let item of arrOfcat(cat['category_id'])" >
+  <ion-col  size="2">
+    </ion-col>
+    <ion-col class="itails" size="6.5" class="ion-text-left">
+      <ion-row class="itxt" [id]="'item_'+item['list_item_id']+'_desc'"><span><strong>{{item["item_description"]}}</strong></span></ion-row>
+      <ion-row class="ithnt" *ngIf="item['item_hint']"><span>{{item["item_hint"]}}</span></ion-row>
+      <ion-row class="itdim" ><span>L : {{item["item_length"]}} | B : {{item["item_width"]}} | H : {{item["item_height"]}}</span></ion-row>
+    </ion-col>
+    <ion-col size="3.5" class="ion-text-right arbtns_col">
+      <p class="ib-remove" *ngIf="item['list_item_qty']"  > <ion-icon name="remove"> </ion-icon></p>
+      <p class="ib-quant" *ngIf="item['list_item_qty']" > {{ item['list_item_qty'] }} </p>
+      <p class="ib-add"> <ion-icon name="add"  > </ion-icon></p>
+    </ion-col>
+</ion-row>
+</ion-accordian>
+</ion-accordian-group> -->
