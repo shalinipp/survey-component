@@ -1,0 +1,28 @@
+<ion-content id="main" [fullscreen]="true">
+    <div id="container">
+      <ion-grid>
+        <ng-template ngFor let-subcat [ngForOf]="subcats" let-i = "index">
+          <ion-row *ngIf="i%3===0" >
+            <ion-col>
+              <ion-badge color="scondary" *ngIf='subcats[i]["category_badge"]' >{{subcats[i]["category_badge"]}}</ion-badge>
+              <img src="assets/icons/item_{{subcats[i]['category_code']}}.png" (click)="itemModal(subcats[i]);">
+              <div> {{ subcats[i]["category_name"] }} </div>
+            </ion-col>
+            <ion-col *ngIf="subcats[i+1]" >
+              <ion-badge color="scondary" *ngIf='subcats[i+1]["category_badge"]' >{{subcats[i+1]["category_badge"]}}</ion-badge>
+              <img src="assets/icons/item_{{subcats[i+1]['category_code']}}.png" (click)="itemModal(subcats[i+1]);">
+              <div> {{ subcats[i+1]["category_name"] }} </div>
+            </ion-col>
+            <ion-col *ngIf="!subcats[i+1]" ></ion-col>
+            <ion-col *ngIf="subcats[i+2]" >
+              <ion-badge color="scondary" *ngIf='subcats[i+2]["category_badge"]' >{{subcats[i+2]["category_badge"]}}</ion-badge>
+              <img src="assets/icons/item_{{subcats[i+2]['category_code']}}.png" (click)="itemModal(subcats[i+2]);">
+              <div> {{ subcats[i+2]["category_name"] }} </div>
+            </ion-col>
+            <ion-col *ngIf="!subcats[i+2]" ></ion-col>
+          </ion-row>
+        </ng-template>
+      </ion-grid>
+    </div>
+  </ion-content>
+  

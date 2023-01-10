@@ -1,0 +1,22 @@
+<ion-content>
+    <ion-grid>
+      <ion-row class="choose">
+        Choose from the list of items:
+      </ion-row>
+      <ion-row class="item-class" *ngFor="let item of items" >
+        <img class="item_icon_class" [ngClass]=" item['list_item_qty'] ? 'item_selected' : ''" src="assets/icons/item_{{item['item_code']}}.png" >
+        <div class="details">
+          <span class="det-txt" [id]="'item_'+item['list_item_id']+'_desc'" (click)="checkOverflow('item_'+item['list_item_id']+'_desc')"  ><strong>{{item["item_description"]}}</strong></span>
+          <span class="hint" *ngIf="item['item_hint']">{{item["item_hint"]}}</span>
+          <span class="dimen" >L : {{item["item_length"]}} | B : {{item["item_width"]}} | H : {{item["item_height"]}}</span>       
+        </div>
+        <div class="buttons" >
+          <p class="ib-remove" *ngIf="item['list_item_qty']" (click)="surveyor.reduceItem(item)" > <ion-icon name="remove"> </ion-icon></p>
+          <p class="ib-quant" *ngIf="item['list_item_qty']"  > {{ item['list_item_qty'] }} </p>
+          <p class="ib-add"> <ion-icon name="add" (click)="surveyor.addItem(item)" > </ion-icon></p>
+        </div>
+      </ion-row>
+    </ion-grid>
+  </ion-content>
+ 
+ 
