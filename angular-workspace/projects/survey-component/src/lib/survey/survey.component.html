@@ -2,25 +2,25 @@
   <ion-content>
   <div id="container">
     <ion-grid class="Catgrid">
-      <ng-template ngFor let-cat [ngForOf]="unique" let-i = "index">
+      <ng-template ngFor let-cat [ngForOf]="categories" let-i = "index">
         <ion-row *ngIf="i%3===0" >
           <ion-col>
-            <ion-badge color="secondary" *ngIf='unique[i]["category_badge"]' >{{unique[i]["category_badge"]}}</ion-badge>
-            <img src="assets/icons/item_{{unique[i]['category_code']}}.png" (click)="createSubsModal(unique[i]);">
-            <div> {{ unique[i]["category_name"] }} </div>
+            <ion-badge color="secondary" *ngIf='categories[i]["category_badge"]' >{{categories[i]["category_badge"]}}</ion-badge>
+            <img src="assets/icons/item_{{categories[i]['category_code']}}.png" (click)="createSubsModal(categories[i]);">
+            <div> {{ categories[i]["category_name"] }} </div>
           </ion-col>
-          <ion-col *ngIf="unique[i+1]" >
-            <ion-badge color="secondary" *ngIf='unique[i+1]["category_badge"]' >{{unique[i+1]["category_badge"]}}</ion-badge>
-            <img src="assets/icons/item_{{unique[i+1]['category_code']}}.png" (click)="createSubsModal(unique[i]);">
-            <div> {{ unique[i+1]["category_name"] }} </div>
+          <ion-col *ngIf="categories[i+1]" >
+            <ion-badge color="secondary" *ngIf='categories[i+1]["category_badge"]' >{{categories[i+1]["category_badge"]}}</ion-badge>
+            <img src="assets/icons/item_{{categories[i+1]['category_code']}}.png" (click)="createSubsModal(categories[i+1]);">
+            <div> {{ categories[i+1]["category_name"] }} </div>
           </ion-col>
-          <ion-col *ngIf="!unique[i+1]" ></ion-col>
-          <ion-col *ngIf="unique[i+2]" >
-            <ion-badge color="secondary" *ngIf='unique[i+2]["category_badge"]' >{{unique[i+2]["category_badge"]}}</ion-badge>
-            <img src="assets/icons/item_{{unique[i+2]['category_code']}}.png" (click)="createSubsModal(unique[i]);">
-            <div> {{ unique[i+2]["category_name"] }} </div>
+          <ion-col *ngIf="!categories[i+1]" ></ion-col>
+          <ion-col *ngIf="categories[i+2]" >
+            <ion-badge color="secondary" *ngIf='categories[i+2]["category_badge"]' >{{categories[i+2]["category_badge"]}}</ion-badge>
+            <img src="assets/icons/item_{{categories[i+2]['category_code']}}.png" (click)="createSubsModal(categories[i+2]);">
+            <div> {{ categories[i+2]["category_name"] }} </div>
           </ion-col>
-          <ion-col *ngIf="!unique[i+2]" ></ion-col>
+          <ion-col *ngIf="!categories[i+2]" ></ion-col>
         </ion-row>
       </ng-template>
     </ion-grid>

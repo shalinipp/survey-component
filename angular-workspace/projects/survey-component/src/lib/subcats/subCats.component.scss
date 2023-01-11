@@ -1,70 +1,87 @@
+#container {
+  text-align: center;
+  left: 0;
+  right: 0;
+}
 
+.Catgrid {
+  margin: 12px;
+  align-items: flex-start;
+}
+
+ion-col {
+  font-size: 0.7em;
+  min-width: 70px;
+  margin: 20px;
+}
+
+ion-col img {
+  border: 2px solid var(--ion-color-primary);
+  border-radius: 12px;
+}
+
+ion-badge {
+  position: absolute;
+  padding: 1px;
+  padding-top: 3px;
+  width: 22px;
+  height: 22px;
+  line-height: 18px;
+  text-align: center;
+  border-radius: 50%;
+  background-color: var(--ion-color-secondary);
+  color: #fff;
+  top: 0;
+  right: 0;
+}
+
+.ftbtns_grid {
+  position: fixed;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  bottom: 0;
+  background-color: var(--ion-color-background);
+}
+
+.ftbtns_col {
+  margin: 0;
+  padding: 0;
+}
+
+.ftbtns {
+  margin: 0;
+  padding: 0;
+  height: 50px;
+  --box-shadow: none;
+}
+
+
+@media only screen and (max-width: 400px) {
   #container {
-    text-align: center;
-    left: 0;
-    right: 0;
-  }
-
-  .Catgrid{
-    margin:12px;
-    align-items: flex-start;
+    padding-top: 10px;
   }
 
   ion-col {
-    font-size: 0.7em;
-    min-width: 70px;
+    margin: 18px;
+  }
+}
+
+@media only screen and (min-width: 400px) {
+  ion-col {
     margin: 20px;
   }
-  ion-col img {
-    border: 2px solid var(--ion-color-primary);
-    border-radius: 12px;
-  }
-  ion-badge {
-    top:0;
-    right:0;
-  }
+}
 
-  .ftbtns_grid {
-    position: fixed;
-    margin:0;
-    padding:0;
-    width: 100%;
-    bottom: 0;
-    background-color: var(--ion-color-background);
+@media only screen and (max-width: 350px) {
+  ion-col {
+    margin: 5px;
   }
-  .ftbtns_col {
-    margin:0;
-    padding:0;
-  }
-  .ftbtns {
-    margin: 0;
-    padding: 0;
-    height: 50px;
-    --box-shadow:none;
-  }
+}
 
-
-  @media only screen and (max-width: 400px) {
-    #container {
-      padding-top:10px;
-    }
-    ion-col {
-      margin: 18px;
-    }
+@media only screen and (max-width: 315px) {
+  ion-col {
+    min-width: 20px;
+    margin: 5px;
   }
-  @media only screen and (min-width: 400px) {
-    ion-col {
-      margin: 20px;
-    }
-  }
-  @media only screen and (max-width: 350px) {
-    ion-col {
-      margin: 5px;
-    }
-  }
-  @media only screen and (max-width: 315px) {
-    ion-col {
-      min-width:20px;
-      margin: 5px;
-    }
-  }
+}

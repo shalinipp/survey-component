@@ -1,24 +1,41 @@
 <ion-header >
   <ion-toolbar >
-  <ion-item  lines="none" id="extb"  class="ion-no-padding" (click)="showSelSubcats1()" >
+  <ion-item  lines="none" id="extb"  class="ion-no-padding" (click)="exploreCategories()" >
     <ion-item class="extxt nobreak" slot="start" lines="none" class="textStyle" >Explore Other Categories</ion-item>
     <ion-button class="exbtn" fill="undefined" shape="round" slot="end"><ion-icon color="light" name="add"></ion-icon></ion-button>
   </ion-item>
   </ion-toolbar>
   <ion-item id="searchtb" mode="md" lines="none" class="ion-no-padding">
-    <ion-searchbar (ionInput)="searchItems($event)" (ionCancel)="searchItems($event)"></ion-searchbar>
+    <ion-searchbar
+      #itemSearchBar
+      (ionInput)="surveyor.searchItems($event, searchSelect)" 
+      (ionCancel)="surveyor.searchItems($event, searchSelect)"
+    ></ion-searchbar>
   </ion-item>
-  <ion-list id="searchSelect">
-    <ul id='searchList'></ul>
+  <ion-list #searchSelect style="display: none;">
+    <ul>
+      <ng-template ngFor let-category [ngForOf]="surveyor.config.categories">
+        <ng-template ngFor let-subCategory [ngForOf]="category.sub_categories">
+          <ng-template ngFor let-item [ngForOf]="subCategory.items" [value]="item">
+            <li
+              *ngIf="searchIncludes(item, itemSearchBar.value)"
+              (click)="surveyor.addItem(item, subCategory, category)"
+            >
+              {{item.item_description}}
+            </li>
+          </ng-template>
+        </ng-template>
+      </ng-template>
+    </ul>
   </ion-list>
 </ion-header>
 
- <ion-accordion-group class="csil_grid" multiple="true" [value]="openCats">
-  <ion-accordion *ngFor="let cat of objectValues(moveCats)" [value]="'category'+cat['category_id']" class="csilcat">
+<ion-accordion-group class="csil_grid" multiple="true" [value]="openCats">
+  <ion-accordion *ngFor="let cat of objectValues(surveyor.moveCats)" [value]="'category'+cat['category_id']" class="csilcat">
     <ion-row slot="header" class="csilcat-row nowrap">
       <ion-col size="2"> <img class="csilcat_icon" src="assets/icons/item_{{cat['category_code']}}.png"> </ion-col>
       <ion-col size="7">{{cat["category_name"]}}
-        <ion-icon class="opencat" name="open-outline" color="primary" (click)="createSelSubsModal(cat)"></ion-icon>
+        <ion-icon class="opencat" name="open-outline" color="primary" (click)="openSubcat(cat)"></ion-icon>
       </ion-col>
       <ion-col size="3" class="ion-text-right"> <ion-badge *ngIf="cat['category_badge']">{{cat["category_badge"]}}</ion-badge> </ion-col>
     </ion-row>
@@ -35,10 +52,10 @@
         </ion-col>
         <ion-col size="3.5" class="ion-text-right arbtns_col">
           <div *ngIf="countOfItems(sitem.list_item_id) as itemCount">
-            <span class="ib-remove"  > <ion-icon name="remove" (click)="surveyor.reduceItem(sitem);removeCatItem(sitem)" > </ion-icon></span>
+            <span class="ib-remove"  > <ion-icon name="remove" (click)="surveyor.reduceItem(sitem)" > </ion-icon></span>
             <span class="ib-quant">{{itemCount}}</span>
           </div>
-          <span class="ib-add"> <ion-icon name="add" (click)="surveyor.addItem(sitem);addCatItem(sitem)"> </ion-icon></span>
+          <span class="ib-add"> <ion-icon name="add" (click)="surveyor.addItem(sitem)"> </ion-icon></span>
         </ion-col>
       </ion-row>
     </div>

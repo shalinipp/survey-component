@@ -6,9 +6,8 @@ import { SubcatsComponent } from './subcats/subcats.component';
 import { SurveyComponent } from './survey/survey.component';
 import { ItemPageComponent } from './item-page/item-page.component';
 
-
-
 @NgModule({
+  schemas:[CUSTOM_ELEMENTS_SCHEMA ],
   declarations: [
     SurveyComponentComponent,
     SubcatsComponent,
@@ -24,7 +23,6 @@ import { ItemPageComponent } from './item-page/item-page.component';
     SurveyComponentComponent
   ],
   bootstrap: [SurveyComponentComponent],
-  schemas:[CUSTOM_ELEMENTS_SCHEMA ]
 })
 export class SurveyComponentModule {
   

@@ -1,6 +1,6 @@
 
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { SurveyService } from '../survey.service';
+import { Component, Input, OnInit } from '@angular/core';
+import { SurveyService } from '../services/survey/survey.service';
 
 @Component({
   selector: 'lib-item-page',
